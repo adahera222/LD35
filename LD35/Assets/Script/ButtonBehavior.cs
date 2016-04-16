@@ -7,6 +7,7 @@ public class ButtonBehavior : MonoBehaviour {
     public bool onePressButton;
     public int timeToPress = 1;
     public DoorBehavior[] attachedDoors;
+    public ButtonIndicatorBehavior indicator;
 
     [HideInInspector]
     public bool pressed = false;
@@ -19,8 +20,16 @@ public class ButtonBehavior : MonoBehaviour {
     void OnTriggerEnter()
     {
         transform.GetChild(0).transform.localPosition = Vector3.zero;
-        timeToPress -= 1;
 
+        if (timeToPress > 0)
+        {
+            timeToPress -= 1;
+            if (indicator)
+            {
+                indicator.TriggerIndicator(timeToPress);
+            }
+        }
+        
         if (timeToPress == 0)
         {
             pressed = true;

@@ -35,13 +35,14 @@ public class SpawnBehavior : MonoBehaviour {
         rigidBody.isKinematic = false;
         shapeBehavior.transform.position = lastCheckpoint.transform.position;
         shapeBehavior.gameObject.GetComponent<MeshRenderer>().enabled = true;
+        shapeBehavior.Reinit();
     }
 
     void OnTriggerEnter(Collider collider)
     {
         if (collider.tag == "Checkpoint")
         {
-            if (lastCheckpoint != null)
+            if (lastCheckpoint != null && lastCheckpoint.GetComponent<MeshRenderer>() != null)
             {
                 lastCheckpoint.GetComponent<MeshRenderer>().enabled = false;
             }

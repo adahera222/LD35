@@ -30,7 +30,7 @@ public class ShapeBehavior : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        Reinit();
     }
 
     // Update is called once per frame
@@ -126,5 +126,17 @@ public class ShapeBehavior : MonoBehaviour
     void OnCollisionStay(Collision collisionInfo)
     {
         isColliding = true;
+    }
+
+    public void Reinit()
+    {
+        currentRatioFactor = 0f;
+        currentRatioVelocity = 0f;
+        var rigidBody = GetComponent<Rigidbody>();
+        rigidBody.velocity = Vector3.zero;
+        previousPosition_1 = transform.position;
+        previousPosition_2 = transform.position;
+        previousPosition_3 = transform.position;
+        previousPosition_4 = transform.position;
     }
 }

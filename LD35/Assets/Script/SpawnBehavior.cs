@@ -6,8 +6,10 @@ public class SpawnBehavior : MonoBehaviour {
     public ShapeBehavior shapeBehavior;
     public GameObject lastCheckpoint;
 
-	// Use this for initialization
-	void Start () {
+    public AudioClip killSound;
+
+    // Use this for initialization
+    void Start () {
 	
 	}
 	
@@ -20,6 +22,10 @@ public class SpawnBehavior : MonoBehaviour {
     void Kill()
     {
         GetComponent<ParticleSystem>().Play();
+        var audioSrc = GetComponent<AudioSource>();
+        audioSrc.Stop();
+        audioSrc.clip = killSound;
+        audioSrc.Play();
         transform.localScale = Vector3.one;
         shapeBehavior.enabled = false;
         shapeBehavior.gameObject.GetComponent<Rigidbody>().isKinematic = true;

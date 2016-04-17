@@ -8,6 +8,8 @@ public class ButtonBehavior : MonoBehaviour {
     public int timeToPress = 1;
     public DoorBehavior[] attachedDoors;
     public ButtonIndicatorBehavior indicator;
+    public AudioClip soundOn; 
+    public AudioClip soundOff;
 
     bool _pressed;
     public bool pressed
@@ -15,6 +17,10 @@ public class ButtonBehavior : MonoBehaviour {
         get
         {
             return _pressed;
+        }
+        private set
+        {
+            _pressed = value;
         }
     }
 
@@ -26,22 +32,29 @@ public class ButtonBehavior : MonoBehaviour {
     void OnTriggerEnter()
     {
         transform.GetChild(0).transform.localPosition = Vector3.zero;
+        var audioSrc = GetComponent<AudioSource>();
+        audioSrc.Stop();
+        audioSrc.clip = soundOn;
+        audioSrc.Play();
 
-        if (timeToPress > 0)
+        if (!pressed)
         {
-            timeToPress -= 1;
-            if (indicator)
+            if (timeToPress > 0)
             {
-                indicator.TriggerIndicator(timeToPress);
+                timeToPress -= 1;
+                if (indicator)
+                {
+                    indicator.TriggerIndicator(timeToPress);
+                }
             }
-        }
         
-        if (timeToPress == 0)
-        {
-            _pressed = true;
-            foreach (var door in attachedDoors)
+            if (timeToPress == 0)
             {
-                door.GetComponent<DoorBehavior>().Open();
+                pressed = true;
+                foreach (var door in attachedDoors)
+                {
+                    door.GetComponent<DoorBehavior>().Open();
+                }
             }
         }
     }
@@ -49,11 +62,16 @@ public class ButtonBehavior : MonoBehaviour {
     void OnTriggerExit()
     {
         transform.GetChild(0).transform.localPosition = unpressedPosition;
+        var audioSrc = GetComponent<AudioSource>();
+        audioSrc.Stop();
+        audioSrc.clip = soundOff;
+        audioSrc.Play();
+
         if (timeToPress == 0)
         {
             if (onePressButton == false)
             {
-                _pressed = false;
+                pressed = false;
                 foreach (var door in attachedDoors)
                 {
                     door.GetComponent<DoorBehavior>().Close();

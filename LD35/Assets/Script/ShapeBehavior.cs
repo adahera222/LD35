@@ -140,14 +140,6 @@ public class ShapeBehavior : MonoBehaviour
     void OnCollisionStay(Collision collision)
     {
         isColliding = true;
-
-        if (collision.gameObject.tag == "Prop")
-        {
-            //Debug.Log("PushProp");
-            var rigidBody = GetComponent<Rigidbody>();
-            var propRigidBody = collision.gameObject.GetComponent<Rigidbody>();
-            propRigidBody.AddForce(rigidBody.velocity * propPushFactor, ForceMode.Force);
-        }
     }
 
     public void Reinit()

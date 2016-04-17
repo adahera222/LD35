@@ -5,9 +5,11 @@ public class DoorBehavior : MonoBehaviour {
 
     public ParticleSystem brokenParticleSystem;
     public bool openBrokes = false;
+    public AudioClip doorOpen;
+    public AudioClip doorBroken;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 	
 	}
 	
@@ -25,17 +27,29 @@ public class DoorBehavior : MonoBehaviour {
         else
         {
             GetComponent<Animator>().SetTrigger("open");
+            var audioSrc = GetComponent<AudioSource>();
+            audioSrc.Stop();
+            audioSrc.clip = doorOpen;
+            audioSrc.Play();
         }
     }
 
     public void Close()
     {
         GetComponent<Animator>().SetTrigger("close");
+        var audioSrc = GetComponent<AudioSource>();
+        audioSrc.Stop();
+        audioSrc.clip = doorOpen;
+        audioSrc.Play();
     }
 
     public void Break()
     {
         GetComponent<Animator>().SetTrigger("break");
+        var audioSrc = GetComponent<AudioSource>();
+        audioSrc.Stop();
+        audioSrc.clip = doorBroken;
+        audioSrc.Play();
         if (brokenParticleSystem!= null)
         {
             brokenParticleSystem.Play();

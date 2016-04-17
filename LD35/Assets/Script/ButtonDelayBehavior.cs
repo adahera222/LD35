@@ -6,8 +6,12 @@ public class ButtonDelayBehavior : MonoBehaviour {
     Vector3 unpressedPosition;
     public bool onePressButton;
     public DoorBehavior[] attachedDoors;
-    public GaugeBehavior gauge;
     public float delay = 3f;
+
+    public AudioClip soundOn;
+    public AudioClip soundOff;
+
+    public GaugeBehavior gauge;
     float _currentDelay = 0f;
     float currentDelay
     {
@@ -66,6 +70,10 @@ public class ButtonDelayBehavior : MonoBehaviour {
         transform.GetChild(0).transform.localPosition = Vector3.zero;
 
         _presence = true;
+        var audioSrc = GetComponent<AudioSource>();
+        audioSrc.Stop();
+        audioSrc.clip = soundOn;
+        audioSrc.Play();
     }
 
     void OnTriggerExit()
@@ -73,6 +81,11 @@ public class ButtonDelayBehavior : MonoBehaviour {
         transform.GetChild(0).transform.localPosition = unpressedPosition;
 
         _presence = false;
+        var audioSrc = GetComponent<AudioSource>();
+        audioSrc.Stop();
+        audioSrc.clip = soundOff;
+        audioSrc.Play();
+
         currentDelay = 0;
         if (pressed)
         {

@@ -14,6 +14,12 @@ public class ShapeBehavior : MonoBehaviour
     float currentRatioFactor = 0f;
     float currentRatioVelocity = 0f;
     float targetRatioFactor = 0f;
+    [Range(0.2f, 10f)]
+    public float maxSpeed = 5;
+    [Range(0.01f, 1f)]
+    public float speedAcceleration = 0.1f;
+    [Range(1f, 10f)]
+    public float fallSqueeze = 1f;
 
     Vector3 previousPosition_1;
     Vector3 previousPosition_2;
@@ -48,7 +54,6 @@ public class ShapeBehavior : MonoBehaviour
         currentRatioVelocity /= 1 + factorDamping;
         currentRatioFactor += currentRatioVelocity;
 
-        rigidBody.AddForce(Input.GetAxis("Horizontal") * cubeSpeed, 0, 0);
         rigidBody.AddForce(0, Input.GetAxis("Vertical") * 0.05f, 0);
     }
 
@@ -68,11 +73,54 @@ public class ShapeBehavior : MonoBehaviour
             rigidBody.velocity = avgVel;
         }
 
+        var curVel = GetComponent<Rigidbody>().velocity;
+        var horizontalForce = Input.GetAxis("Horizontal");
+        if (Mathf.Abs(horizontalForce) > 0.1)
+        {
+            if (Mathf.Abs(curVel.x) < maxSpeed)
+            {
+                if (horizontalForce < 0)
+                {
+                    curVel.x += speedAcceleration * horizontalForce;
+                }
+                else
+                {
+                    curVel.x += speedAcceleration * horizontalForce;
+                }
+
+            }
+        }
+        else
+        {
+            if (curVel.x > 0)
+            {
+                curVel.x += Mathf.Max(-speedAcceleration, -curVel.x);
+            }
+            else if (curVel.x < 0)
+            {
+                curVel.x += Mathf.Max(speedAcceleration, curVel.x);
+            }
+        }
+        rigidBody.velocity = curVel;
+
         previousPosition_4 = previousPosition_3;
         previousPosition_3 = previousPosition_2;
         previousPosition_2 = previousPosition_1;
         previousPosition_1 = transform.position;
         isColliding = false;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        var vel_1 = transform.position - previousPosition_1;
+        var vel_2 = previousPosition_1 - previousPosition_2;
+        var vel_3 = previousPosition_2 - previousPosition_3;
+        var vel_4 = previousPosition_3 - previousPosition_4;
+        var avgVel = new Vector3((vel_1.x + vel_2.x + vel_3.x + vel_4.x) / 4,
+            (vel_1.y + vel_2.y + vel_3.y + vel_4.y) / 4,
+            0);
+        avgVel *= fallSqueeze;
+        currentRatioVelocity = -Mathf.Abs(avgVel.y);
     }
 
     void OnCollisionStay(Collision collisionInfo)

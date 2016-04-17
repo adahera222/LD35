@@ -9,11 +9,17 @@ public class ButtonBehavior : MonoBehaviour {
     public DoorBehavior[] attachedDoors;
     public ButtonIndicatorBehavior indicator;
 
-    [HideInInspector]
-    public bool pressed = false;
+    bool _pressed;
+    public bool pressed
+    {
+        get
+        {
+            return _pressed;
+        }
+    }
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         unpressedPosition = transform.GetChild(0).transform.localPosition;
 	}
 
@@ -32,10 +38,10 @@ public class ButtonBehavior : MonoBehaviour {
         
         if (timeToPress == 0)
         {
-            pressed = true;
+            _pressed = true;
             foreach (var door in attachedDoors)
             {
-                door.GetComponent<Animator>().SetTrigger("open");
+                door.GetComponent<DoorBehavior>().Open();
             }
         }
     }
@@ -47,10 +53,10 @@ public class ButtonBehavior : MonoBehaviour {
         {
             if (onePressButton == false)
             {
-                pressed = false;
+                _pressed = false;
                 foreach (var door in attachedDoors)
                 {
-                    door.GetComponent<Animator>().SetTrigger("close");
+                    door.GetComponent<DoorBehavior>().Close();
                 }
             }
         }

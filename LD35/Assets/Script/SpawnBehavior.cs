@@ -4,7 +4,7 @@ using System.Collections;
 public class SpawnBehavior : MonoBehaviour {
 
     public ShapeBehavior shapeBehavior;
-    GameObject lastCheckpoint;
+    public GameObject lastCheckpoint;
 
 	// Use this for initialization
 	void Start () {
@@ -47,6 +47,14 @@ public class SpawnBehavior : MonoBehaviour {
             }
             collider.GetComponent<MeshRenderer>().enabled = true;
             lastCheckpoint = collider.gameObject;
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Trap")
+        {
+            Kill();
         }
     }
 }

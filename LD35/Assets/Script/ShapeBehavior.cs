@@ -20,6 +20,10 @@ public class ShapeBehavior : MonoBehaviour
     public float speedAcceleration = 0.1f;
     [Range(1f, 10f)]
     public float fallSqueeze = 1f;
+    public float propPushFactor = 5f;
+
+    static Vector3 leanLeft = new Vector3(0, 0, 0.1f);
+    static Vector3 leanRight = new Vector3(0, 0, -0.1f);
 
     Vector3 previousPosition_1;
     Vector3 previousPosition_2;
@@ -92,16 +96,26 @@ public class ShapeBehavior : MonoBehaviour
         }
         else
         {
-            if (curVel.x > 0)
-            {
-                curVel.x += Mathf.Max(-speedAcceleration, -curVel.x);
-            }
-            else if (curVel.x < 0)
-            {
-                curVel.x += Mathf.Max(speedAcceleration, curVel.x);
-            }
+            //if (curVel.x > 0)
+            //{
+            //    curVel.x += Mathf.Max(-speedAcceleration, -curVel.x);
+            //}
+            //else if (curVel.x < 0)
+            //{
+            //    curVel.x += Mathf.Max(speedAcceleration, curVel.x);
+            //}
+            curVel.x *= 0.9f;
         }
         rigidBody.velocity = curVel;
+
+        if (rigidBody.velocity.x > 0.1f)
+        {
+            transform.localEulerAngles = leanLeft;
+        }
+        else if (rigidBody.velocity.x < -0.1f)
+        {
+            transform.localEulerAngles = leanRight;
+        }
 
         previousPosition_4 = previousPosition_3;
         previousPosition_3 = previousPosition_2;
@@ -123,9 +137,17 @@ public class ShapeBehavior : MonoBehaviour
         currentRatioVelocity = -Mathf.Abs(avgVel.y);
     }
 
-    void OnCollisionStay(Collision collisionInfo)
+    void OnCollisionStay(Collision collision)
     {
         isColliding = true;
+
+        if (collision.gameObject.tag == "Prop")
+        {
+            //Debug.Log("PushProp");
+            var rigidBody = GetComponent<Rigidbody>();
+            var propRigidBody = collision.gameObject.GetComponent<Rigidbody>();
+            propRigidBody.AddForce(rigidBody.velocity * propPushFactor, ForceMode.Force);
+        }
     }
 
     public void Reinit()

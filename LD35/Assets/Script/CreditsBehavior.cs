@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class CreditsBehavior : MonoBehaviour
 {
@@ -48,7 +47,7 @@ public class CreditsBehavior : MonoBehaviour
                 switch (action)
                 {
                     case ActionAfterAnimation.menu:
-                        SceneManager.LoadScene(nextScene);
+                        Application.LoadLevel(nextScene);
                         break;
                 }
             }

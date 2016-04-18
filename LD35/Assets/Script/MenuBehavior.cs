@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public enum ActionAfterAnimation
 {
@@ -58,11 +57,11 @@ public class MenuBehavior : MonoBehaviour {
                         break;
 
                     case ActionAfterAnimation.start:
-                        SceneManager.LoadScene(gameSceneName);
+                        Application.LoadLevel(gameSceneName);
                         break;
 
                     case ActionAfterAnimation.credits:
-                        SceneManager.LoadScene(creditsSceneName);
+                        Application.LoadLevel(creditsSceneName);
                         break;
                 }
             }

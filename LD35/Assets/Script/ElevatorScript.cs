@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public enum ElevatorType
 {
@@ -104,7 +103,7 @@ public class ElevatorScript : MonoBehaviour {
     {
         if (nextLevelName != null)
         {
-            SceneManager.LoadScene(nextLevelName);
+            Application.LoadLevel(nextLevelName);
         }
     }
 
